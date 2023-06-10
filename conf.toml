@@ -1,0 +1,7 @@
+[[data]]
+a1 = "localhost:5000"
+a2 = "localhost:22"
+
+[[data]]
+a1 = "localhost:5001"
+a2 = "localhost:9090"
