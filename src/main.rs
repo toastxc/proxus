@@ -1,16 +1,12 @@
 use futures::future::try_join_all;
 use proxus::data::Conf;
 use proxus::result::{Error, ErrorConvert};
+use std::env;
 use std::net::SocketAddr;
 use std::net::ToSocketAddrs;
 use tokio::net::TcpListener;
-
 #[tokio::main]
 async fn main() {
-    let path = "conf.toml";
-
-    use std::env;
-
     let args: Vec<String> = env::args().collect();
     let path = if args.len() > 1 {
         &args[1]
