@@ -1,7 +1,11 @@
+# domain names or IP addresses can be used
+# multiple entries are valid under the name 'data'
 [[data]]
-a1 = "localhost:5000"
-a2 = "localhost:22"
+a1 = "domain.name:PORT"
+a2 = "domain.name:PORT"
 
-[[data]]
-a1 = "localhost:5001"
-a2 = "localhost:9090"
+# simple example
+#[[data]]
+#a1 = "localhost:443"
+#a2 = "192.168.54.211:443"
+
