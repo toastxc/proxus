@@ -8,15 +8,19 @@ Proxus was designed and intended for binding virtual machine and hypervisor port
 **examples can be found [here](https://github.com/toastxc/proxus/blob/main/conf.toml)**
 
 ```bash
+# create config file 
+proxus config.toml
+```
+
+## Installing 
+```bash
+# download
+git clone https://github.com/toastxc/proxus.git
+cd proxus
 # compile to release
 cargo r -r
 # install 
 sudo cp /target/release/proxus /bin/
-# create a config
-# 
-#
-# run config 
-proxus conf.toml
 ```
 
 ## Compatibility
