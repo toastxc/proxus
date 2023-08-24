@@ -1,21 +1,22 @@
 # proxus
-Fast and easy layer 3 reverse proxy
-
+Fast and easy TCP/UDP reverse proxy
 
 
 ## Usage
 Proxus was designed and intended for binding virtual machine and hypervisor ports together but the config allows for binding both ports and IP addresses together.
 
-```toml
-# In this example the SSH port of a virtual machine is binded to the hypervisor on port 5000 
-[[data]]
-a1 = "192.168.100.2:22"
-a2 = "192.168.1.5:5000"
+**examples can be found [here](https://github.com/toastxc/proxus/blob/main/conf.toml)**
 
-# in this example the service cockpit.socket is binded to port 80 - this requires sudo
-[[data]]
-a1 = "localhost:9090"
-a2 = "localhost:80"
+```bash
+# compile to release
+cargo r -r
+# install 
+sudo cp /target/release/proxus /bin/
+# create a config
+# 
+#
+# run config 
+proxus conf.toml
 ```
 
 ## Compatibility
