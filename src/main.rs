@@ -21,10 +21,7 @@ async fn main() {
 
     println!("generating connections...");
 
-    println!("{:#?}", conf);
-
     let tasks = conf.data.into_iter().map(|a| {
-        println!("new thread...");
         tokio::spawn(async move {
             if let Err(err) = connection(a.a1, a.a2).await {
                 println!("Error processing item: {}", err);
@@ -39,10 +36,8 @@ async fn main() {
 }
 async fn connection(a1: String, a2: String) -> Result<(), Error> {
     let src_addr = address(&a1)?;
-    println!("target IP valid");
 
     let dst_addr = address(&a2)?;
-    println!("connection IP valid");
 
     let listener = TcpListener::bind(src_addr).await.res()?;
 

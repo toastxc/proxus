@@ -1,11 +1,38 @@
-# domain names or IP addresses can be used
-# multiple entries are valid under the name 'data'
+# standard config for proxus - connects a domain name or IP address & port 
+# example result
+# localhost:9090 <-> 192.168.1.1:9091
 [[data]]
-a1 = "domain.name:PORT"
-a2 = "domain.name:PORT"
+a1 = "localhost:9090"
+a2 = "192.168.1.1:9091"
 
-# simple example
-#[[data]]
-#a1 = "localhost:443"
-#a2 = "192.168.54.211:443"
+# port bind - bridge many ports together on different IP addreses
+# example result
+# localhost:9090 <-> 192.168.1.1:9090
+# localhost:9091 <-> 192.168.1.1:9091
+[[data]]
+ip = ["localhost", "192.168.1.1"]
+bind = [9090, 9091]
+
+# bindcast - bridge many ports together but change the port number - the ports are connected based on the index of the array
+# example result
+# localhost:9091 <-> 192.168.1.1:9090
+# localhost:443 <-> 192.168.1.1:8080
+[[data]]
+ip = ["localhost", "192.168.1.1"]
+bind = [9091, 443]
+cast = [9090, 8080]
+
+
+
+# example of casting connection of freeipa directory service server to hypervisor
+# 80 and 44 are reserved so they need to be casted to another port
+[[data]]
+ip = ["192.168.1.100", "192.168.122.58"]
+bind = [80, 443]
+cast = [8080, 8090]
+
+# the rest are just forwarded
+[[data]]
+ip = ["192.168.1.100", "192.168.122.58"]
+bind = [8, 464, 636, 88, 464, 123]
 
