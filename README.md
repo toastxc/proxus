@@ -28,4 +28,4 @@ Like all software made by myself I am willing to help bring support for windows 
 
 
 ## Performance
-Proxus created a new async task for every connection, if these runtimes crash for whatever reason they will not crash other processes.
+Proxus created a new async task for every connection, if these runtimes crash for whatever reason they will not crash other processes. Proxus's performance is only limited by the multithreaded performance of the server it is deployed on.
