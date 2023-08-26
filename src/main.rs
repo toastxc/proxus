@@ -1,9 +1,12 @@
 use futures::future::try_join_all;
-use proxus::data::Conf;
-use proxus::result::{Error, ErrorConvert};
-use std::env;
-use std::net::SocketAddr;
-use std::net::ToSocketAddrs;
+use proxus::{
+    data::Conf,
+    result::{Error, ErrorConvert},
+};
+use std::{
+    env,
+    net::{SocketAddr, ToSocketAddrs},
+};
 use tokio::net::TcpListener;
 #[tokio::main]
 async fn main() {
@@ -21,13 +24,51 @@ async fn main() {
 
     println!("generating connections...");
 
-    let tasks = conf.data.into_iter().map(|a| {
-        tokio::spawn(async move {
-            if let Err(err) = connection(a.a1, a.a2).await {
-                println!("Error processing item: {}", err);
-            }
-        })
-    });
+    let mut tasks = Vec::new();
+
+    if let Some(reconnect) = conf.reconnect {
+        let mut counter = 0;
+        let mut check = true;
+        conf.data.into_iter().for_each(|a| {
+            tasks.push(tokio::spawn(async move {
+                while check {
+                    if let Err(err) = connection(a.a1.clone(), a.a2.clone()).await {
+                        println!("Error processing item\nerror: {}\nconfig: {:?}", err, a);
+                    } else if reconnect.reset_after_success.is_some_and(|i| i) {
+                        counter = 0;
+                    };
+
+                    let retry = std::time::Duration::from_secs(reconnect.retry_time.unwrap_or(5));
+                    let retry_s = retry.as_secs();
+
+                    println!("retrying in {} second{}", retry_s, {
+                        if retry_s > 1 {
+                            "s"
+                        } else {
+                            ""
+                        }
+                    });
+                    tokio::time::sleep(retry).await;
+
+                    if let Some(count) = reconnect.watchdog_timer {
+                        counter += 1;
+                        if counter >= count {
+                            println!("failed reattempts, exiting thread");
+                            check = false;
+                        }
+                    }
+                }
+            }));
+        });
+    } else {
+        conf.data.into_iter().for_each(|a| {
+            tasks.push(tokio::spawn(async move {
+                if let Err(err) = connection(a.a1.clone(), a.a2.clone()).await {
+                    println!("Error processing item\nerror: {}\nconfig: {:?}", err, a);
+                };
+            }));
+        });
+    }
 
     // Await the completion of all tasks
     if let Err(err) = try_join_all(tasks).await {

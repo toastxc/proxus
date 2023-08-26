@@ -4,7 +4,14 @@ use serde::{Deserialize, Serialize};
 use validator::Validate;
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct Conf {
+    pub reconnect: Option<Reconnect>,
     pub data: Vec<ConfData>,
+}
+#[derive(Serialize, Deserialize, Debug, Default, Clone)]
+pub struct Reconnect {
+    pub retry_time: Option<u64>,
+    pub watchdog_timer: Option<u64>,
+    pub reset_after_success: Option<bool>,
 }
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct ConfData {
@@ -26,6 +33,7 @@ pub struct BindCast {
 }
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct EncapHolder {
+    pub reconnect: Option<Reconnect>,
     pub data: Vec<DataEncap>,
 }
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -78,6 +86,7 @@ impl Conf {
             toml::from_str(&String::from_utf8(std::fs::read(path).res()?).unwrap()).res()?;
 
         Ok(Conf {
+            reconnect: encap.reconnect,
             data: encap
                 .data
                 .into_iter()
