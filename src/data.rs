@@ -26,7 +26,7 @@ pub struct PortBindings {
 }
 #[derive(Serialize, Deserialize, Debug, Default, Clone, Validate)]
 pub struct BindCast {
-    #[validate(length(min = 2, max = 2))]
+    #[validate(length(min = 1, max = 2))]
     pub ip: Vec<String>,
     pub bind: Vec<u32>,
     pub cast: Vec<u32>,
@@ -60,8 +60,8 @@ impl From<PortBindings> for Vec<ConfData> {
             .bind
             .into_iter()
             .map(|port| ConfData {
-                a1: format!("{}:{}", value.ip[0], port),
-                a2: format!("{}:{}", value.ip[1], port),
+                a1: format!("{}:{}", value.ip.get(0).unwrap(), port),
+                a2: format!("{}:{}", value.ip.get(1).unwrap_or(value.ip.get(0).unwrap()), port),
             })
             .collect()
     }
@@ -74,7 +74,7 @@ impl From<BindCast> for Vec<ConfData> {
             .enumerate()
             .map(|(iter, bind)| ConfData {
                 a1: format!("{}:{}", value.ip[0], bind),
-                a2: format!("{}:{}", value.ip[1], value.cast[iter]),
+                a2: format!("{}:{}", value.ip.get(1).unwrap_or(value.ip.get(0).unwrap()), value.cast[iter]),
             })
             .collect()
     }

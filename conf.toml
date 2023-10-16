@@ -13,7 +13,6 @@ reset_after_success = true
 [reconnect]
 # ^ this will retry every 5 seconds, with no watchdog
 
-
 # standard config for proxus - connects a domain name or IP address & port 
 # example result
 # localhost:9090 <-> 192.168.1.1:9091
@@ -47,8 +46,16 @@ ip = ["192.168.1.100", "192.168.122.58"]
 bind = [80, 443]
 cast = [8080, 8090]
 
+# 'bindcast' can also map ports on the same IP
+[[data]]
+ip = ["localhost"]
+bind = [80, 443]
+cast = [8080, 8090]
+
+
 # the rest are just forwarded
 [[data]]
 ip = ["192.168.1.100", "192.168.122.58"]
 bind = [8, 464, 636, 88, 464, 123]
+
 
