@@ -6,8 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-futures = "0.3.28"
-serde = { version = "1.0.164", features = ["derive"] }
-tokio = { version = "1.28.2", features = ["full"] }
-toml = "0.7.4"
-validator = { version = "0.16.1", features = ["derive"] }
+futures = { version = "0.3.28", default-features = false, features = [  "thread-pool"] }
+serde = { default-features = false, version = "1.0.189", features = ["derive"] }
+tokio = { default-features = false, version = "1.33.0", features = [ "io-util",  "net",  "macros", "rt-multi-thread", "time"] }
+toml = "0.8.2"
+validator = { default-features = false, version= "0.16.1", features = ["derive"] }
