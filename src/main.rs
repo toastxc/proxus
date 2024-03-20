@@ -1,8 +1,6 @@
 use futures::future::try_join_all;
-use proxus::{
-    data::Conf,
-    result::{Error, ErrorConvert},
-};
+use proxus::data::Conf;
+use proxus::Result;
 use std::{
     env,
     net::{SocketAddr, ToSocketAddrs},
@@ -18,9 +16,7 @@ async fn main() {
         return;
     };
 
-    let conf = Conf::from_file(path)
-        .resm(&format!("invalid config, are you sure {path} is real?"))
-        .unwrap();
+    let conf = Conf::from_file(path).unwrap();
 
     println!("generating connections...");
 
@@ -75,12 +71,12 @@ async fn main() {
         println!("THREAD ERROR: {:?}", err);
     }
 }
-async fn connection(a1: String, a2: String) -> Result<(), Error> {
+async fn connection(a1: String, a2: String) -> Result<()> {
     let src_addr = address(&a1)?;
 
     let dst_addr = address(&a2)?;
 
-    let listener = TcpListener::bind(src_addr).await.res()?;
+    let listener = TcpListener::bind(src_addr).await?;
 
     if src_addr.ip() == dst_addr.ip() {
         println!(
@@ -93,7 +89,7 @@ async fn connection(a1: String, a2: String) -> Result<(), Error> {
         println!("casting connection {} to {}", src_addr, dst_addr);
     }
     loop {
-        let (client, _) = listener.accept().await.res()?;
+        let (client, _) = listener.accept().await?;
         tokio::spawn(async move {
             if let Err(womp) = proxus::tcp::proxy(client, dst_addr).await {
                 println!("WARNING: {}", womp);
@@ -102,11 +98,11 @@ async fn connection(a1: String, a2: String) -> Result<(), Error> {
     }
 }
 
-fn address(input: &str) -> Result<SocketAddr, Error> {
+fn address(input: &str) -> Result<SocketAddr> {
     if let Ok(mut ip_iter) = input.to_socket_addrs() {
         if let Some(ip) = ip_iter.next() {
             return Ok(ip);
         };
     }
-    input.parse::<SocketAddr>().res()
+    Ok(input.parse::<SocketAddr>()?)
 }

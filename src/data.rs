@@ -1,5 +1,4 @@
-use crate::result::{Error, ErrorConvert};
-
+use crate::Result;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 #[derive(Serialize, Deserialize, Debug, Default, Clone)]
@@ -60,8 +59,12 @@ impl From<PortBindings> for Vec<ConfData> {
             .bind
             .into_iter()
             .map(|port| ConfData {
-                a1: format!("{}:{}", value.ip.get(0).unwrap(), port),
-                a2: format!("{}:{}", value.ip.get(1).unwrap_or(value.ip.get(0).unwrap()), port),
+                a1: format!("{}:{}", value.ip.first().unwrap(), port),
+                a2: format!(
+                    "{}:{}",
+                    value.ip.get(1).unwrap_or(value.ip.first().unwrap()),
+                    port
+                ),
             })
             .collect()
     }
@@ -74,16 +77,19 @@ impl From<BindCast> for Vec<ConfData> {
             .enumerate()
             .map(|(iter, bind)| ConfData {
                 a1: format!("{}:{}", value.ip[0], bind),
-                a2: format!("{}:{}", value.ip.get(1).unwrap_or(value.ip.get(0).unwrap()), value.cast[iter]),
+                a2: format!(
+                    "{}:{}",
+                    value.ip.get(1).unwrap_or(value.ip.first().unwrap()),
+                    value.cast[iter]
+                ),
             })
             .collect()
     }
 }
 
 impl Conf {
-    pub fn from_file(path: &str) -> Result<Self, Error> {
-        let encap: EncapHolder =
-            toml::from_str(&String::from_utf8(std::fs::read(path).res()?).unwrap()).res()?;
+    pub fn from_file(path: &str) -> Result<Self> {
+        let encap: EncapHolder = toml::from_str(&String::from_utf8(std::fs::read(path)?)?)?;
 
         Ok(Conf {
             reconnect: encap.reconnect,

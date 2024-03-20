@@ -1,3 +1,4 @@
 pub mod data;
-pub mod result;
+
 pub mod tcp;
+pub type Result<T> = core::result::Result<T, anyhow::Error>;
