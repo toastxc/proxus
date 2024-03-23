@@ -12,7 +12,14 @@ Proxus was designed and intended for binding virtual machine and hypervisor port
 proxus config.toml
 ```
 
-## Installing 
+## Installing
+### Rust (recommended)
+```bash
+cargo install proxus
+```
+
+
+### Git
 ```bash
 # download
 git clone https://github.com/toastxc/proxus.git
@@ -26,6 +33,5 @@ sudo cp /target/release/proxus /bin/
 ## Compatibility
 Like all software made by myself I am willing to help bring support for windows if requested, but Windows support is not tested for nor is it a high priority.
 
-
 ## Performance
-Proxus created a new async task for every connection, if these runtimes crash for whatever reason they will not crash other processes. Proxus's performance is only limited by the multithreaded performance of the server it is deployed on.
+The performance impact of Proxus is negligible, and unlikely to be an issue on any system or workload
