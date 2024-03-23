@@ -98,11 +98,14 @@ async fn connection(a1: String, a2: String) -> Result<()> {
     }
 }
 
+
+/// Resolves An domain name or IP address into a socket address
+/// this is needed as SocketAddr does not support TLDs.
 fn address(input: &str) -> Result<SocketAddr> {
     if let Ok(mut ip_iter) = input.to_socket_addrs() {
-        if let Some(ip) = ip_iter.next() {
+        while let Some(ip) = ip_iter.next() {
             return Ok(ip);
         };
-    }
+    };
     Ok(input.parse::<SocketAddr>()?)
 }
