@@ -1,7 +1,10 @@
-# proxus
+
+
+
+![proxus-logo](https://github.com/user-attachments/assets/45b7ae96-ffa4-4da7-9cb5-bd30dd5b914b)
+
+
 Fast and easy TCP/UDP reverse proxy
-
-
 ## Usage
 Proxus was designed and intended for binding virtual machine and hypervisor ports together but the config allows for binding both ports and IP addresses together.
 
